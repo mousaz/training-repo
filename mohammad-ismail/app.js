@@ -1,7 +1,6 @@
 var express = require('express')
     , jobs = require('./routes/jobs')
     , http = require('http')
-    , path = require('path');
 
 var app = express();
 app.configure(function(){
