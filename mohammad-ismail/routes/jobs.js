@@ -5,9 +5,10 @@ exports.list = function (request, response) {
     var parser = new xml2js.Parser();
 
     //http://jobs.ps/rss.xml
+    //http://localhost:9999/jobs
     var req = http.get('http://jobs.ps/rss.xml', function (res) {
         var pageData = "";
-        res.setEncoding ('utf8');
+        res.setEncoding('utf8');
         res.on('data', function (chunk) {
             pageData += chunk;
         });
@@ -32,21 +33,23 @@ exports.list = function (request, response) {
                         response.send(JSON.stringify(finalResult));
                         response.end("");
                     }
-                    catch (err) {
+                    catch (e) {
                         response.statusCode = 500;
-                        response.end("error at server!!");
-                        console.error("catch 3rd");
+                        response.end("error at server!");
+                        console.error("Got error: " + e.message);
                     }
                 });
-                parser.parseString (data);
+                parser.parseString(data);
             }
-            catch (ex) {
+            catch (e) {
                 response.statusCode = 500;
-                response.end("error at server!!");
-                console.error("second catch");
+                response.end("error at server!");
+                console.error("Got error: " + e.message);
             }
         });
     }).on('error', function(e) {
+            response.statusCode = 500;
+            response.end("error at server!");
             console.error("Got error: " + e.message);
         });
 }
