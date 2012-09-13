@@ -1,8 +1,10 @@
 var http = require('http'),
     xml2js = require('xml2js');
 
-exports.list = function ( request, response ) {
-    var parser = new xml2js.Parser ();
+exports.list = function (request, response) {
+    var parser = new xml2js.Parser();
+
+    //http://jobs.ps/rss.xml
     var req = http.get('http://jobs.ps/rss.xml', function (res) {
         var pageData = "";
         res.setEncoding ('utf8');
@@ -31,18 +33,20 @@ exports.list = function ( request, response ) {
                         response.end("");
                     }
                     catch (err) {
+                        response.statusCode = 500;
                         response.end("error at server!!");
-                        console.errno("catch 3rd");
+                        console.error("catch 3rd");
                     }
                 });
                 parser.parseString (data);
             }
             catch (ex) {
+                response.statusCode = 500;
                 response.end("error at server!!");
                 console.error("second catch");
             }
         });
     }).on('error', function(e) {
-            console.log("Got error: " + e.message);
+            console.error("Got error: " + e.message);
         });
 }
