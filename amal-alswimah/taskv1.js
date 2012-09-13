@@ -10,11 +10,11 @@ newsApp.get("/news", function (req, res) {
         {
             if (error)
             {
-                res.end(" ERROR : The connection with  ' www.feeds.bbci.co.uk ' can not be established .\n\n The ERROR is : "+error+" .");
+                res.end(" ERROR : The connection with  ' www.feeds.bbci.co.uk ' can not be established .\n\n The ERROR is : " + error + " .");
             }
             else if(internalresponse.statusCode !== 200)
             {
-                res.end(" ERROR : The connection with ' www.feeds.bbci.co.uk ' can not be established .\n\n  StatusCode = " + internalresponse.statusCode+" .");
+                res.end(" ERROR : The connection with ' www.feeds.bbci.co.uk ' can not be established .\n\n  StatusCode = " + internalresponse.statusCode + " .");
             }
             else
             {
@@ -30,7 +30,7 @@ newsApp.get("/news", function (req, res) {
                             link:oneItem.link[0],
                             description:oneItem.description[0]
                         });
-                    } )
+                    } );
 
 
                     var allNewsItem =
@@ -43,7 +43,7 @@ newsApp.get("/news", function (req, res) {
         })}
     catch(exception)
     {
-        res.end(" There is an exception occurred .\n\n Exception type is : "+exception+" .");
+        res.end(" There is an exception occurred .\n\n Exception Message : " + exception + " .");
     }
  } )
 newsApp.listen('8080');
