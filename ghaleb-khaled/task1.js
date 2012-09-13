@@ -45,11 +45,10 @@ function process(response){
 function parseToJSON(response,xmlData){
 	var parser = new xml2js.Parser();
 	parser.parseString(xmlData, function (err, result) {
+	
 		var temp = rebuilt(result.rss.channel[0].item);
-		response.end(JSON.stringify(temp));//
+		response.end(JSON.stringify(temp));// 
 		for(var propertyName in temp) {
-			// propertyName is what you want
-			// you can get the value like this: myObject[propertyName]
 			console.log(propertyName);
 		}
 		
@@ -69,11 +68,3 @@ function rebuilt(obj){
 	}
 	return newObj;
 }
-// function buildObj(){
-	// var main = {};
-	// main.name="ghaleb"
-	// main.age = 22;
-	// main.family = {name:"ali",age:50,relation="father"}
-	// console.log(JSON.stringify(main));
-	
-// }
