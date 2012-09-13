@@ -1,21 +1,19 @@
 var http = require('http'),
     xml2js = require('xml2js');
 
-exports.list = function (request, response) {
-    var parser = new xml2js.Parser();
-    try {
-        var req;
-        req = http.get('http://jobs.ps/rss.xml', function (res) {
-            var pageData = "";
-            res.setEncoding('utf8');
-            res.on('data', function (chunk) {
-                pageData += chunk;
-            });
-            res.on('end', function () {
-                try {
-                    var data = new Buffer(pageData).toString();
-
-                    parser.addListener('end', function (result) {
+exports.list = function ( request, response ) {
+    var parser = new xml2js.Parser ();
+    var req = http.get('http://jobs.ps/rss.xml', function (res) {
+        var pageData = "";
+        res.setEncoding ('utf8');
+        res.on('data', function (chunk) {
+            pageData += chunk;
+        });
+        res.on('end', function () {
+            try {
+                var data = new Buffer(pageData).toString();
+                parser.addListener('end', function (result) {
+                    try {
                         var jsonObj = [];
                         var itemsArray = result.rss.channel[0].item;
                         itemsArray.forEach(function (item) {
@@ -27,23 +25,24 @@ exports.list = function (request, response) {
                             };
                             jsonObj.push(jobs);
                         });
-
-                        var finalResult = { jobs: jsonObj };
+                        var finalResult = {jobs: jsonObj };
                         console.log("the data ready to send");
                         response.send(JSON.stringify(finalResult));
-                    });
-
-                    parser.parseString(data);
-                }
-                catch (ex) {
-                    console.error(ex);
-                    response.end("there is an error");
-                }
-            });
+                        response.end("");
+                    }
+                    catch (err) {
+                        response.end("error at server!!");
+                        console.errno("catch 3rd");
+                    }
+                });
+                parser.parseString (data);
+            }
+            catch (ex) {
+                response.end("error at server!!");
+                console.error("second catch");
+            }
         });
-    }
-    catch (ex) {
-        console.error(ex);
-        response.end("there is an error");
-    }
+    }).on('error', function(e) {
+            console.log("Got error: " + e.message);
+        });
 }
