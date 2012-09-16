@@ -43,12 +43,13 @@ function process(response){
 
 
 function parseToJSON(response,xmlData){
-	var parser = new xml2js.Parser();
+	var parser = new xml2js.Parser( {explicitArray : false} );
 	parser.parseString(xmlData, function (err, result) {
-	
-		var temp = rebuilt(result.rss.channel[0].item);
-		response.end(JSON.stringify(temp));// 
+		var temp = rebuilt(result.rss.channel.item);
+		response.end(JSON.stringify(temp));//
 		for(var propertyName in temp) {
+			// propertyName is what you want
+			// you can get the value like this: myObject[propertyName]
 			console.log(propertyName);
 		}
 		
