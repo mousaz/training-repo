@@ -1,7 +1,8 @@
 var jobs = require('./../routes/jobs'),
     http = require('http');
-exports.testFilter = function (test) {
-    var req = http.get('http://localhost:8080/jobs', function (res) {
+exports.testList = function (test) {
+    var query = 'engineer';
+    var req = http.get('http://localhost:8080/jobs?filter=' + query, function (res) {
         var pageData = "";
         res.setEncoding('utf8');
         res.on('data', function (chunk) {
@@ -9,17 +10,17 @@ exports.testFilter = function (test) {
         });
         res.on('end', function () {
             try {
-                result =  JSON.parse(pageData.toString());
+                var  result =  JSON.parse(pageData.toString());
             }
             catch (error) {
                 res.statusCode = 500;
                 console.log("the server have unstable data");
             }
-            if (result && result.jobs) {
-                test.ok(Array.isArray(result.jobs), "the result is not found or no Json array");
+            if ((result && result.jobs) && Array.isArray(result.jobs)) {
+                result.jobs.forEach(function (element, index) {
+                    test.ok(element.title.toLowerCase().indexOf(query) > -1 || element.description.toLowerCase().indexOf(query) > -1, "the result have no mach at: " + index);
+                });
             }
-            test.equal(jobs.filter({ filter: 'Engineer' }, result.jobs).toString(), jobs.filter({ filter: 'engineer' }, result.jobs).toString(), 'the result at "Engineer" not equal "engineer"');
-            test.notEqual(jobs.filter({ filter: 'Program' }, result.jobs), jobs.filter({ filter: 'proGRam' }, result.jobs), 'the result at "Program" not equal "programs"');
             test.done();
         });
     }).on('error', function (e) {
