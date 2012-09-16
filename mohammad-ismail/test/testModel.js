@@ -2,9 +2,7 @@ var jobs = require('./../routes/jobs'),
     http = require('http');
 
 exports.testList = function (test) {
-    var result;
-
-    req = http.get('http://localhost:8080/jobs', function (res) {
+    var req = http.get('http://localhost:8080/jobs', function (res) {
         var pageData = "";
         res.setEncoding('utf8');
         res.on('data', function (chunk) {
