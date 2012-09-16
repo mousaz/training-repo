@@ -1,4 +1,4 @@
-var news = require('../Logic/NewsJSON.js');
+var news = require('../Logic/news.js');
 exports.index = function(req, res){
     news.bringData(res);
 };
