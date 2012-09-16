@@ -4,6 +4,7 @@ exports.list = function (request, response) {
     var parser = new xml2js.Parser();
     var queryIndex = request.query;
     request.setEncoding('utf-8');
+    
     var req = http.get('http://jobs.ps/rss.xml', function (res) {
         var pageData = "";
         res.on('data', function (chunk) {
@@ -52,13 +53,15 @@ exports.list = function (request, response) {
             response.end("error at server!");
             console.error("Got error: " + e.message);
         });
-}
+};
 exports.filter = filterData = function (query, jsonArray) {
     var jsonArrayBuffer = [];
     jsonArray.forEach(function (item) {
-        if (item.title.toLowerCase().indexOf(query.filter.toString().toLowerCase()) > -1 || item.description.toLowerCase().indexOf(query.filter.toString().toLowerCase()) > -1){
+        var queryLower = query.filter.toLowerCase();
+        if ( item.title.toLowerCase().indexOf(queryLower) > -1 ||
+            item.description.toLowerCase().indexOf(queryLower) > -1 ) {
             jsonArrayBuffer.push(item);
         }
     });
     return jsonArrayBuffer;
-}
+};
