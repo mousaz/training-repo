@@ -32,22 +32,22 @@ mkdir /c/projects/nodejs/training
 cd /c/projects/nodejs/training
 git clone git@github.com:mousaz/training-repo.git .
 ```
-## 2. Create a new git branch to include your changes within it. Please let the name of branch reflect your ownership for it along with its content.
-For example, in this case it can be named 'lastname-firstapp'
+## 2. Create a new git branch to include your changes within it. 
+Please let the name of branch reflect your ownership for it along with its content. For example, in this case it can be named 'lastname-firstapp'
 ```bash
 git checkout -b <your_branch>
 ```
 
-## 3. Create a directory for your applications in the format 'firstname-lastname' (e.g jim-carrey). Please notice that throughtout this tutorial
-we'll call this directory 'your_dir', so when you start applying don't forget to replace it with your actual name. This is important to keep things clean and not to 
-miss up others work.
+## 3. Create a directory for your applications in the format 'firstname-lastname' (e.g jim-carrey). 
+Please notice that throughtout this tutorial we'll call this directory 'your_dir', so when you start applying don't forget to replace it with your actual name. This is important to keep things clean and not to miss up others work.
 
 ```bash
 mkdir your_dir
 cd your_dir
 ```
 
-## 4. Create 'node_modules' directory under 'your_dir'. This directory will hold the installation of the modules that you'll need during development.
+## 4. Create 'node_modules' directory under 'your_dir'. 
+This directory will hold the installation of the modules that you'll need during development.
 ```bash
 mkdir node_modules
 ```
