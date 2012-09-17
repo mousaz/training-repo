@@ -52,7 +52,7 @@ This directory will hold the installation of the modules that you'll need during
 mkdir node_modules
 ```
 
-## 5. Create a subdirectory for you application under 'your_dir' (e.g firstapp) and navigate to it.
+## 5. Create a subdirectory for your application under 'your_dir' (e.g firstapp) and navigate to it.
 ```bash
 mkdir firstapp
 cd firstapp
@@ -82,10 +82,10 @@ Press CTRL+C to kill it.
 ```bash
 git add index.js                       # stage index.js for commit
 git commit -m 'my first node app'      # commit to local repository
-git push origin <your_branch_name>     # push master branch to origin (github)
+git push origin <your_branch>          # push your_branch to origin (github)
 ```
 
-## 7. Creating a test app for your app
+## 7. Creating a test for your application.
 
 In this turotial we will use [nodeunit](https://github.com/caolan/nodeunit) to create our test app.
 
