@@ -1,40 +1,6 @@
 ﻿# Training Repository
 The purpose of this repository is to be a practical enviornment for training. 
 
-
-The anode 10 second rules:
-
- * 10 seconds from `git push` to the cloud
- * 10 seconds to run all tests for all apps
- * 10 seconds to see a log line
-
-Some of the things we think can help with that goal are:
-
- * Git push < 30sec deployment to 100s of instances
- * Don't care about servers: apps scale elasticly on the farm (much better utilization of resources)
- * Isolate prod and dev with branches and subdomains (foo.msproto.net -> master branch, foo.xxx.msproto.net -> xxx branch)
- * Continuous testing in the cloud when merging into `master` via a github pull request
- * Extreme developer visibility: real-time logging, daily app status mails, alerts on errors, statistics
- * Zero-config monitoring: external ping with alerts, resource monitoring (avg latency, CPU, memory)
- * Zero-config middleware: postbacks, request logging, authentication, compression, https, instance affinity
- * No more workers: pushqueue/cron helps treating internal triggers like external HTTP requests
- * Automatic CDN hosting of static content
- * Automatic geo-redundency
-
-
- >> Note: some of the features are still under development, but you get the gist of it...
-
-# Communicato
-
-__Welcome, welcome, welcome!__ Getting started with anode should be a piece of cake.
-If it isn't, please let us know by [opening issues](https://github.com/anodejs/repo/issues/new), 
-[updating this file](https://github.com/anodejs/repo/edit/master/README.md) as you see fit or 
-mailing the [anodejsdev@microsoft.com](mailto:anodejsdev@microsoft.com) list.
-Also, please [subscribe](http://idwebelements/GroupManagement.aspx?Group=anodejsdev&Operation=join) to
-the _anodejsdev_ distribution list. We are sending important announcements there.
-
-Notice - this page doesn't look good in IE. Consider other browsers when you work with GitHub.
-
 # Getting started
 
 Make sure you have:
@@ -53,8 +19,8 @@ Make sure you have:
  8. Watch [this lecture](http://www.youtube.com/watch?v=jo_B4LTHi3I) about nodejs. 
  8. Set up the editor/IDE of your choise with tabs = 2 spaces.
 
-# Your First Node.js Applicaiton
-This is a short tutorial (should take about 30 minutes) to get you started on the essentials of node and github. 
+# Your First Node.js Application
+This is a short tutorial to get you started on the essentials of node and github. 
 
 Fire up "git bash" (from the Start menu...).
 
@@ -72,14 +38,24 @@ For example, in this case it can be named 'lastname-firstapp'
 git checkout -b <your_branch>
 ```
 
-## 3. Create a directory for your applications in the format 'firstname-lastname' (e.g jonny-depp).
-Please put all the apps you create under this subdirectory called by your firstname-lastname. This is important to keep things clean and not to 
-interfer with others work. Also, create a directory of the application (e.g firstapp) and navigate to it.
+## 3. Create a directory for your applications in the format 'firstname-lastname' (e.g jim-carrey). Please notice that throughtout this tutorial
+we'll call this directory 'your_dir', so when you start applying don't forget to replace it with your actual name. This is important to keep things clean and not to 
+miss up others work.
 
 ```bash
-mkdir firstname-lastname
-mkdir firstname-lastname/firstapp
-cd firstname-lastname/firstapp
+mkdir your_dir
+cd your_dir
+```
+
+## 4. Create 'node_modules' directory under 'your_dir'. This directory will hold the installation of the modules that you'll need during development.
+```bash
+mkdir node_modules
+```
+
+## 5. Create a subdirectory for you application under 'your_dir' (e.g firstapp) and navigate to it.
+```bash
+mkdir firstapp
+cd firstapp
 ```
 
 ## 4. Create __'index.js'__ which is the 'main' of your node app:
@@ -116,8 +92,8 @@ In this turotial we will use [nodeunit](https://github.com/caolan/nodeunit) to c
  * Create a test app for your ```firstapp``` app:
 
 ```bash
-mkdir firstname-lastname/test
-cd firstname-lastname/test
+mkdir your_dir/test
+cd your_dir/test
 ```
 
  * Create ```tests.js``` for the tests:
@@ -136,18 +112,18 @@ exports.mytest = function(test) {
 Run your tests locally using `nodeunit`:
 
  * Install `nodeunit` in the global scope using npm: `npm install -g nodeunit` (this adds `nodeunit` to the PATH).
- * Open a git bash window, navigate to ```firstname-lastname``` and start your app:
+ * Open a git bash window, navigate to ```your_dir``` and start your app:
 
 ```bash
-$ cd firstname-lastname/firstapp
+$ cd your_dir/firstapp
 $ node index.js
 info: myapp started at Sun, 15 Jan 2012 11:18:43 GMT
 ```
 
- * Open another git bash window, navigate to ```firstname-lastname/firstapp/test``` and run the tests using `nodeunit`:
+ * Open another git bash window, navigate to ```your_dir/firstapp/test``` and run the tests using `nodeunit`:
   
 ```bash
-$ cd anoder/firstapp/test
+$ cd your_dir/firstapp/test
 $ nodeunit tests.js
 
 tests.js
