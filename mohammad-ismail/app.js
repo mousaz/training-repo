@@ -1,21 +1,36 @@
-var express = require('express' ),
-    jobs = require('./routes/jobs'),
-    http = require('http');
-
-var app = express();
-app.configure(function () {
-    app.set('port', process.env.PORT || 8080);
-    app.use(express.favicon());
-    app.use(express.logger('dev'));
-    app.use(express.bodyParser());
-    app.use(express.methodOverride());
-    app.use(app.router);
-});
-app.configure('development', function () {
-    app.use(express.errorHandler());
-});
-app.get('/jobs', jobs.list);
-
-http.createServer(app).listen(app.get('port'), function () {
-    console.log("Express server listening on port " + app.get('port'));
-});
+var express = require('express'),
+    path = require('path'),
+    fs = require('fs'),
+    jobs = require('./routes/jobs.js'),
+    docRouter = require('docrouter').DocRouter,
+    url = require('url'),
+    port = process.env.PORT || 8080,
+    app = express.createServer();
+process.chdir(__dirname);
+app.use(express.bodyParser());
+app.use(express.favicon());
+app.use(express.cookieParser());
+app.use('/jobs', docRouter(express.router, '/jobs', function (app) {
+    app.get('/', function (req, res) {
+            jobs.list(req, res);
+        },
+        {
+            id: 'sample_json',
+            name: 'json',
+            usage: 'for filter the result by title or description',
+            doc: 'parse xml data from jobs.ps/rss feed and reform it to Json object',
+            example: 'filter=engineer',
+            params: {
+                "filter" : {
+                    "short": "filter",
+                    "type": "string",
+                    "doc": 'filter the Json data from which is mach with title or description tags',
+                    "style": "template",
+                    "required": "false"
+                }
+            }
+        }
+    );
+}));
+app.listen(port);
+console.log('listening on port', port);

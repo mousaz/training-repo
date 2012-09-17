@@ -4,7 +4,6 @@ exports.list = function (request, response) {
     var parser = new xml2js.Parser();
     var queryIndex = request.query;
     request.setEncoding('utf-8');
-    
     var req = http.get('http://jobs.ps/rss.xml', function (res) {
         var pageData = "";
         res.on('data', function (chunk) {
