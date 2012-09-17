@@ -13,8 +13,8 @@ module.exports =
     {
         request("http://127.0.0.1:8080/news", function (error, response, body)
             {
-                test.equal(error, null, "Error occurred as expected : " + error + " .");
-                test.equal(response.statusCode, 200, "Error occurred as expected : " + response.statusCode + " .");
+                test.equal(error, null, "Error occurred as not expected : " + error + " .");
+                test.equal(response.statusCode, 200, "Error occurred as not expected : " + response.statusCode + " .");
                 var newsArray = JSON.parse(body);
                 test.ok(newsArray.newsArray, "newsArray variable should not refer to null.");
                 test.ok(Array.isArray(newsArray.newsArray), "the structure of ( newsArray ) variable should be an array.");
