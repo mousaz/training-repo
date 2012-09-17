@@ -1,21 +1,31 @@
 var request = require("request");
-module.exports=
+module.exports =
 {
-    setUp:function(callback){callback()},
-    tearDown:function(callback){callback()},
-    test1:function(test)
+    setUp: function (callback)
     {
-        request("http://127.0.0.1:8080/news", function(error, response, body){
-            test.ok(true);
-            test.equal(error, null, "error1");
-            test.equal(response.statusCode, 200, "error2");
-            var jO=JSON.parse(body);
-            test.notEqual(jO.newsArray, null, "error3");
-            test.equal(Array.isArray(jO.newsArray), true, "error4");
-            test.notEqual(jO.newsArray[0].link, undefined, "error5");
-            test.notEqual(jO.newsArray[0].title, undefined, "error6");
-            test.notEqual(jO.newsArray[0].description, undefined, "error7");
-            test.done();})
-
+        callback()
+    },
+    tearDown: function (callback)
+    {
+        callback()
+    },
+    newsFeedTest: function (test)
+    {
+        request("http://127.0.0.1:8080/news", function (error, response, body)
+            {
+                test.equal(error, null, "Error occurred as expected : " + error + " .");
+                test.equal(response.statusCode, 200, "Error occurred as expected : " + response.statusCode + " .");
+                var newsArray = JSON.parse(body);
+                test.ok(newsArray.newsArray, "newsArray variable should not refer to null.");
+                test.ok(Array.isArray(newsArray.newsArray), "the structure of ( newsArray ) variable should be an array.");
+                if(newsArray.newsArray[0])
+                {
+                    test.ok(newsArray.newsArray[0].link, "the link property should not be undefined .");
+                    test.ok(newsArray.newsArray[0].title, "the title property should not be undefined .");
+                    test.ok(newsArray.newsArray[0].description, "the description property should not be undefined .");
+                }
+                test.done();
+            }
+        );
     }
 }
