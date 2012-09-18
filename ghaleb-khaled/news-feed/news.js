@@ -39,13 +39,12 @@ function parseToJSON(response, xmlData) {
     var parser = new xml2js.Parser({explicitArray : false});
 
     parser.parseString(xmlData, function (err, result) {
-		if(err != null){
+		if (err) {
 			response.writeHead(500);
 			response.end();
-		}else{
+		} else {
 			var filterdNewsResult = filterNewsAttributes(result.rss.channel.item);//get the items in the RSS then filter it
-			response.writeHead(200, {'Content-Type':'application/json'});
-			response.end(JSON.stringify(filterdNewsResult));
+			response.json(filterdNewsResult);
 		}
     });
 }
