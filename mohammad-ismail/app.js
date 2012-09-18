@@ -1,16 +1,10 @@
 var express = require('express'),
-    path = require('path'),
-    fs = require('fs'),
     jobs = require('./routes/jobs.js'),
     docRouter = require('docrouter').DocRouter,
-    url = require('url'),
     port = process.env.PORT || 8080,
     app = express.createServer();
-process.chdir(__dirname);
-app.use(express.bodyParser());
-app.use(express.favicon());
-app.use(express.cookieParser());
-app.use('/jobs', docRouter(express.router, '/jobs', function (app) {
+
+app.use('/jobs', docRouter(express.router, '/jobs[?filter=]', function (app) {
     app.get('/', function (req, res) {
             jobs.list(req, res);
         },
@@ -18,14 +12,14 @@ app.use('/jobs', docRouter(express.router, '/jobs', function (app) {
             id: 'sample_json',
             name: 'json',
             usage: 'for filter the result by title or description',
-            doc: 'parse xml data from jobs.ps/rss feed and reform it to Json object',
-            example: 'filter=engineer',
+            doc: 'Returns a list of the jobs announced on jobs.ps. If a filter is passed, returns only results matching that filter',
+            example: '/jobs?filter=engineer',
             params: {
                 "filter" : {
                     "short": "filter",
                     "type": "string",
-                    "doc": 'filter the Json data from which is mach with title or description tags',
-                    "style": "template",
+                    "doc": 'When specified, only job enteries that match the filter value will be returned',
+                    "style": "/jobs?filter=engineer",
                     "required": "false"
                 }
             }
