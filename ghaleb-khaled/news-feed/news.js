@@ -1,10 +1,3 @@
-/**
- * Created with JetBrains WebStorm.
- * User: gkhaled
- * Date: 9/16/12
- * Time: 2:41 PM
- * To change this template use File | Settings | File Templates.
- */
 var http = require('http'),
     xml2js = require('xml2js'),
     url = require("url");
@@ -40,8 +33,9 @@ function parseToJSON(response, xmlData) {
 
     parser.parseString(xmlData, function (err, result) {
 		if (err) {
+            var error = '{statusCode: 500, message: "XML parsing failed"}';
 			response.writeHead(500);
-			response.end();
+			response.end(JSON.stringify(error));
 		} else {
 			var filterdNewsResult = filterNewsAttributes(result.rss.channel.item);//get the items in the RSS then filter it
 			response.json(filterdNewsResult);
@@ -64,9 +58,10 @@ function process(response) {
             });
         });
     req.on('error', function (e) {
+        var error = '{statusCode: 500, message: "Cant reach BBC RSS"}';
         console.log('problem with request: ' + e.message);
         response.writeHead(500, { 'Content-Type': 'text/plain'});
-        response.end();
+        response.end(JSON.stringify(error));
     });
     req.end();
 }
