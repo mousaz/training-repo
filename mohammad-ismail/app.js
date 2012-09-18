@@ -4,7 +4,7 @@ var express = require('express'),
     port = process.env.PORT || 8080,
     app = express.createServer();
 
-app.use('/jobs', docRouter(express.router, '/jobs[?filter=]', function (app) {
+app.use('/jobs', docRouter(express.router, '/jobs', function (app) {
     app.get('/', function (req, res) {
             jobs.list(req, res);
         },
@@ -16,13 +16,16 @@ app.use('/jobs', docRouter(express.router, '/jobs[?filter=]', function (app) {
             example: '/jobs?filter=engineer',
             params: {
                 "filter" : {
-                    "short": "filter",
                     "type": "string",
-                    "doc": 'When specified, only job enteries that match the filter value will be returned',
+                    "doc": 'When specified, only job entries that match the filter value will be returned',
                     "style": "query",
                     "required": "false"
                 }
+            },
+            response: {
+                representations: ["application/json"]
             }
+
         }
     );
 }));
