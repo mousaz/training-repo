@@ -14,7 +14,7 @@ var options = {
 function filterNewsAttributes(extractNews) {
     var filteredNewsItem = {};
     filteredNewsItem.news = [];
-	extractNews.forEach(
+    extractNews.forEach(
 		function (newsItem) {
 			var story = {
 				title: newsItem.title,
