@@ -66,9 +66,7 @@ function process(response) {
         });
     req.on('error', function (e) {
         console.log('problem with request: ' + e.message);
-        response.writeHead(500, {
-            'Content-Type': 'text/plain' 
-		});
+        response.writeHead(500, { 'Content-Type': 'text/plain'});
         response.end();
     });
     req.end();
