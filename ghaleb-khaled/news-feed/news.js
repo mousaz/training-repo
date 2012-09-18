@@ -9,10 +9,10 @@ var options = {
     path: '/news/rss.xml',
     method: 'GET'
 };
-//filter news depending on filter details from user
+//filter news depending on filter details from user - case insensitive -
 function wordFiltering(newsItem, filter) {
-    var titleIndex = newsItem.title.indexOf(filter);
-    var descriptionIndex = newsItem.description.indexOf(filter);
+    var titleIndex = newsItem.title.toUpperCase().indexOf(filter.toUpperCase());
+    var descriptionIndex = newsItem.description.toUpperCase().indexOf(filter.toUpperCase());
     return titleIndex !== -1 || descriptionIndex !== -1;
 }
 
