@@ -9,9 +9,15 @@ var options = {
     path: '/news/rss.xml',
     method: 'GET'
 };
+//filter news depending on filter details from user
+function wordFiltering(newsItem, filter) {
+    var titleIndex = newsItem.title.indexOf(filter);
+    var descriptionIndex = newsItem.description.indexOf(filter);
+    return titleIndex !== -1 || descriptionIndex !== -1;
+}
 
 //filter the tags we got
-function filterNewsAttributes(extractNews) {
+function filterNewsAttributes(extractNews, filter) {
     var filteredNewsItem = {};
     filteredNewsItem.news = [];
     extractNews.forEach(
@@ -21,14 +27,16 @@ function filterNewsAttributes(extractNews) {
 				description: newsItem.description,
 				link: newsItem.link
 			};
-			filteredNewsItem.news.push(story);
+            if (filter === null || wordFiltering(story, filter)) {
+                filteredNewsItem.news.push(story);
+            }
 		}
 	);
     return filteredNewsItem;
 }
 
 //parse XML into Objects
-function parseToJSON(response, xmlData) {
+function parseToJSON(response, xmlData, filter) {
     var parser = new xml2js.Parser({explicitArray : false});
 
     parser.parseString(xmlData, function (err, result) {
@@ -37,14 +45,14 @@ function parseToJSON(response, xmlData) {
 			response.writeHead(500, { 'Content-Type': 'application/json'});
 			response.end(JSON.stringify(error));
 		} else {
-			var filterdNewsResult = filterNewsAttributes(result.rss.channel.item);//get the items in the RSS then filter it
+			var filterdNewsResult = filterNewsAttributes(result.rss.channel.item, filter);//get the items in the RSS then filter it
 			response.json(filterdNewsResult);
 		}
     });
 }
 
 //get XML from BBC
-function process(response) {
+function process(response, filter) {
     var xmlData = "";
     var req = http.request(options,
         function (res) {
@@ -54,7 +62,7 @@ function process(response) {
             });
             res.on('end', function () {
                 //console.log(xmlData)
-                parseToJSON(response, xmlData); //when XML is ready, pasre to JSON
+                parseToJSON(response, xmlData, filter); //when XML is ready, pasre to JSON
             });
         });
     req.on('error', function (e) {
@@ -67,6 +75,6 @@ function process(response) {
 }
 
 
-exports.bringData = function (res) {
-    process(res);
+exports.bringData = function (res, filter) {
+    process(res, filter);
 }
