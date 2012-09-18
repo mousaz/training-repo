@@ -14,13 +14,19 @@ function getWeatherInfo(res, url) {
                     message: " ERROR : The connection with  weather service " +
                         "can not be established .\n\n The ERROR is : " + error + " ."
                 }
-                res.writeHead(500, {"Content-Type": "text/plain"});
+                res.writeHead(500, {"Content-Type": "application/json"});
                 res.end(JSON.stringify(errorObject));
             }
             if (internalRes.statusCode !== 200) {
-                console.error("Error : status code during request .");
-                res.end(" ERROR : The connection with weather service can not" +
-                    " be established .\n\n  StatusCode = " + internalRes.statusCode + " .");
+                console.error(" Error from weather service .Status code = " + internalRes.statusCode+" .");
+                var errorObject =
+                {
+                    statusCode: 500,
+                    message: " ERROR : The connection with weather service can not" +
+                        " be established .\n\n  StatusCode = " + internalRes.statusCode + " ."
+                }
+                res.writeHead(500, {"Content-Type": "application/json"});
+                res.end(JSON.stringify(errorObject));
             }
             parseToJson(res, body);
         }
@@ -31,9 +37,14 @@ function parseToJson(res, body) {
             console.log("inside parsing body .");
             if (err) {
                 console.error("Error happened during parsing the body .");
-                res.writeHead(500, {"Content-Type": "text/plain"});
-                return res.end("Error : error occurred during retrieving \n\n" +
-                    "the data .\n\nError =  " + err + " .");
+                var errorObject =
+                {
+                    statusCode: 500,
+                    message: "Error : error occurred during retrieving \n\n" +
+                        "the data .\n\nError =  " + err + " ."
+                }
+                res.writeHead(500, {"Content-Type": "application/json"});
+                return res.end(JSON.parse(errorObject));
             }
             var errorObject =
             {
