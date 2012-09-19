@@ -1,17 +1,12 @@
 var jobs = require('./../routes/jobs'),
-    http = require('http');
+    request = require('request');
 exports.testResultWithoutQuery = function (test) {
-    var req = http.get('http://localhost:8080/jobs', function (res) {
-        var pageData = "";
-        res.setEncoding('utf8');
-        res.on('data', function (chunk) {
-            pageData += chunk;
-        });
-        res.on('end', function () {
+    var req = request('http://localhost:8080/jobs', function (error, res, body) {
+        if (!error && res.statusCode === 200) {
             try {
-                var  result =  JSON.parse(pageData.toString());
+                var  result =  JSON.parse(body.toString());
             }
-            catch (error) {
+            catch (e) {
                 res.statusCode = 500;
                 console.log("the server have unstable data");
             }
@@ -27,24 +22,20 @@ exports.testResultWithoutQuery = function (test) {
                 });
             }
             test.done();
-        });
-    }).on('error', function (e) {
-            test.ok(false, "there is no data from service or the server is down or unreachable");
+        }
+        else {
+            test.ok(false,"there error on server or no data");
             test.done();
-            console.error("Got error: " + e.message);
-        });
+        }
+
+    });
 };
 exports.testResultWithQuery = function (test) {
     var query = 'engineer';
-    var req = http.get('http://localhost:8080/jobs?filter=' + query, function (res) {
-        var pageData = "";
-        res.setEncoding('utf8');
-        res.on('data', function (chunk) {
-            pageData += chunk;
-        });
-        res.on('end', function () {
+    var req = request.get('http://localhost:8080/jobs?filter=' + query, function (error, res, body) {
+        if (!error && res.statusCode === 200) {
             try {
-                var  result =  JSON.parse(pageData.toString());
+                var  result =  JSON.parse(body.toString());
             }
             catch (error) {
                 res.statusCode = 500;
@@ -58,23 +49,18 @@ exports.testResultWithQuery = function (test) {
                 });
             }
             test.done();
-        });
-    }).on('error', function (e) {
+        }
+        else {
             test.ok(false, "there is no data from service or the server is down or unreachable");
             test.done();
             console.error("Got error: " + e.message);
-        });
+        }});
 }
 exports.testFilterMethod = function (test) {
-    var req = http.get('http://localhost:8080/jobs', function (res) {
-        var pageData = "";
-        res.setEncoding('utf8');
-        res.on('data', function (chunk) {
-            pageData += chunk;
-        });
-        res.on('end', function () {
+    var req = request.get('http://localhost:8080/jobs', function (error, res, body) {
+        if (!error && res.statusCode ===200) {
             try {
-                result =  JSON.parse(pageData.toString());
+                result =  JSON.parse(body.toString());
             }
             catch (error) {
                 res.statusCode = 500;
@@ -90,10 +76,8 @@ exports.testFilterMethod = function (test) {
                 jobs.filter({ filter: 'proGRam' }, result.jobs).toString(),
                 'the result at "Program" not equal "programs"');
             test.done();
-        });
-    }).on('error', function (e) {
-            test.ok(false, "there is no data from service or the server is down or unreachable");
+        }
+        else { test.ok(false, "there is no data from service or the server is down or unreachable");
             test.done();
-            console.error("Got error: " + e.message);
-        });
+            console.error("Got error: " + e.message);}});
 }

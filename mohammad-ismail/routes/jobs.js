@@ -1,17 +1,14 @@
-var http = require('http'),
+var requestJobs = require('request'),
     xml2js = require('xml2js');
 exports.list = function (request, response) {
     var parser = new xml2js.Parser();
     var queryIndex = request.query;
     request.setEncoding('utf-8');
-    var req = http.get('http://jobs.ps/rss.xml', function (res) {
-        var pageData = "";
-        res.on('data', function (chunk) {
-            pageData += chunk;
-        });
-        res.on('end', function () {
+    requestJobs.get('http://jobs.ps/rss.xml', function (error, res, body) {
+        if (!error && res.statusCode === 200) {
+
             try {
-                var data = new Buffer(pageData).toString();
+                var data = new Buffer(body).toString();
                 parser.addListener('end', function (result) {
                     try {
                         var jsonObj = [];
@@ -46,13 +43,14 @@ exports.list = function (request, response) {
                 response.end("error at server!");
                 console.error("Got error: " + e.message);
             }
-        });
-    }).on('error', function (e) {
+        }
+        else{
             response.statusCode = 500;
             response.end("error at server!");
-            console.error("Got error: " + e.message);
-        });
+        }
+    });
 };
+
 exports.filter = filterData = function (query, jsonArray) {
     var jsonArrayBuffer = [];
     jsonArray.forEach(function (item) {
