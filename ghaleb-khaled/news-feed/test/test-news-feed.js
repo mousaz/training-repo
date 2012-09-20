@@ -2,7 +2,7 @@ var http = require('http');
 var server = 'http://127.0.0.1:8080/news';
 
 
-function testPath(path, test, cb) {
+function dataFromPath(path, test, cb) {
     var resData = new String();
     http.get(server + path, function (res) {
 
@@ -21,7 +21,7 @@ function testPath(path, test, cb) {
 
 exports.testItem = function (test) {
     var trueValue = "Soldier has baby in Afghanistan";
-    testPath('?filter=Afghanistan', test, function (testValue) {
+    dataFromPath('?filter=Afghanistan', test, function (testValue) {
         try {
             test.equal(JSON.parse(testValue).news[0].title, trueValue, "retrieved data is not valid");
         } catch (e) {
@@ -32,8 +32,8 @@ exports.testItem = function (test) {
 }
 
 exports.testEmpty = function (test) {
-    testPath('?filter=', test, function (empValue1) {
-        testPath('', test, function (empValue2) {
+    dataFromPath('?filter=', test, function (empValue1) {
+        dataFromPath('', test, function (empValue2) {
             if(empValue1 != empValue2) {
                 test.ok(false," empty test is failed ")
             }
