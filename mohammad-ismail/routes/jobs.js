@@ -1,12 +1,16 @@
-var requestJobs = require('request'),
+var requestModule = require('request'),
     xml2js = require('xml2js');
 exports.list = function (request, response) {
     var parser = new xml2js.Parser();
     var queryIndex = request.query;
     request.setEncoding('utf-8');
-    requestJobs.get('http://jobs.ps/rss.xml', function (error, res, body) {
-        if (!error && res.statusCode === 200) {
-
+    requestModule.get('http://localhost:9999/jobs.xml', function (error, res, body) {
+        if (error || res.statusCode !== 200) {
+            response.statusCode = 500;
+            var errorMassage = {statusCode: 500, message: "error at server"};
+            response.statusCode = 500;
+            response.end(JSON.stringify(errorMassage));
+        }
             try {
                 var data = new Buffer(body).toString();
                 parser.addListener('end', function (result) {
@@ -32,7 +36,7 @@ exports.list = function (request, response) {
                     }
                     catch (e) {
                         response.statusCode = 500;
-                        response.end("error at server!");
+                        response.end(JSON.stringify({ statusCode: 500, message: "error at server" }));
                         console.error("Got error: " + e.message);
                     }
                 });
@@ -40,14 +44,9 @@ exports.list = function (request, response) {
             }
             catch (e) {
                 response.statusCode = 500;
-                response.end("error at server!");
+                response.end(JSON.stringify({ statusCode: 500, message: "error at server" }));
                 console.error("Got error: " + e.message);
             }
-        }
-        else{
-            response.statusCode = 500;
-            response.end("error at server!");
-        }
     });
 };
 
