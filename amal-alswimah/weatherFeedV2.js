@@ -23,38 +23,29 @@ function parseToJson(res, body) {
                 message: " sorry , this application " +
                     "does not support your city name ."
             }
+            property = "result";
             if (!result) {
-                console.log("result is undefined .");
-                res.writeHead(400, {"Content-Type": "application/json"});
-                return res.end(JSON.stringify(errorObject));
+                return errorObjectPrint(res, errorObject, property);
             }
             var weatherdata = result.weatherdata;
+            property = "weatherdata";
             if (!weatherdata) {
-                console.log("weatherdata property is undefined .");
-                res.writeHead(400, {"Content-Type": "application/json"});
-                return res.end(JSON.stringify(errorObject));
-
+                return errorObjectPrint(res, errorObject, property);
             }
             var weather = weatherdata.weather;
+            property = "weather";
             if (!weather) {
-                console.log("weather property is undefined .");
-                res.writeHead(400, {"Content-Type": "application/json"});
-                return res.end(JSON.stringify(errorObject));
+                return errorObjectPrint(res, errorObject, property);
             }
-
             var weatherItem = weather[0];
+            property = " ' 0 ' ";
             if (!weatherItem) {
-                console.log("'0' property in weather[0] is undefined .");
-                res.writeHead(400, {"Content-Type": "application/json"});
-                return res.end(JSON.stringify(errorObject));
-
+                return errorObjectPrint(res, errorObject, property);
             }
             var current = weatherItem.current;
+            property = "current";
             if (!current) {
-                console.log("current property is undefined .");
-                res.writeHead(400, {"Content-Type": "application/json"});
-                return res.end(JSON.stringify(errorObject));
-
+                return errorObjectPrint(res, errorObject, property);
             }
             var temperature = result.weatherdata.weather[0].current[0]["$"].temperature;
             var skytext = result.weatherdata.weather[0].current[0]["$"].skytext;
@@ -67,6 +58,11 @@ function parseToJson(res, body) {
             res.end(JSON.stringify(weatherObject));
         }
     );
+}
+function errorObjectPrint(res, errorObject, property) {
+    console.log(" " + property + " property is undefined .");
+    res.writeHead(400, {"Content-Type": "application/json"});
+    res.end(JSON.stringify(errorObject));
 }
 weatherApp.get("/weather", function (req, res) {
         try {
@@ -81,39 +77,36 @@ weatherApp.get("/weather", function (req, res) {
                         "(  city name , ex : location = ramallah )that you " +
                         "want to know about it's weather ."
                 }
-                res.end(JSON.stringify(errorObject));
-            } else {
-                console.log("make http request .");
-                var xmlData = "";
-                var options = {
-                    host: 'weather.partners.msn.com',
-                    port: 80,
-                    path: '/find.aspx?weasearchstr='+location,
-                    method: 'get'
-                };
-                var req1 = http.request(options, function(res1) {
-                    console.log("inside http request module .");
-                    console.log('STATUS: ' + res1.statusCode);
-                    console.log('HEADERS: ' + JSON.stringify(res1.headers));
-                    res1.setEncoding('utf8');
-                    res1.on('data', function (chunck) {
-                        console.log("inside read data from server .");
-                        console.log('BODY: ' + chunck);
-                        xmlData += chunck;
-                    });
-                    res1.on("end",function() {
-                        console.log("read data");
-                        parseToJson(res, xmlData);
-                        res.end(xmlData);
-                    });
-                });
-                req1.on('error', function(e) {
-                    console.log('problem with request: ' + e);
-                    res.end("error : "+e);
-                });
-                req1.end();
-
+                return res.end(JSON.stringify(errorObject));
             }
+            console.log("make http request .");
+            var xmlData = "";
+            var options = {
+                host: 'weather.partners.msn.com',
+                port: 80,
+                path: '/find.aspx?weasearchstr='+location,
+                method: 'get'
+            };
+            var internalRequest = http.request(options, function(internalResponse) {
+            console.log("inside http request module .");
+            console.log('STATUS: ' + internalResponse.statusCode);
+            console.log('HEADERS: ' + JSON.stringify(internalResponse.headers));
+            internalResponse.setEncoding('utf8');
+            internalResponse.on('data', function (chunck) {
+                console.log("inside read data from server .");
+                console.log('BODY: ' + chunck);
+                xmlData += chunck;
+            });
+                internalResponse.on("end",function() {
+                console.log("read data");
+                parseToJson(res, xmlData);
+                });
+            });
+            internalRequest.on('error', function(e) {
+                console.log('problem with request: ' + e);
+                res.end("error : "+e);
+            });
+            internalRequest.end();
         } catch (exception) {
             console.log("inside Exception .");
             res.end(" There is an exception occurred ." +
