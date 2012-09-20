@@ -11,8 +11,11 @@ var options = {
 };
 //filter news depending on filter details from user - case insensitive -
 function wordFiltering(newsItem, filter) {
-    var titleIndex = newsItem.title.toUpperCase().indexOf(filter.toUpperCase());
-    var descriptionIndex = newsItem.description.toUpperCase().indexOf(filter.toUpperCase());
+    var filterUpper = filter.toUpperCase();
+
+    var titleIndex = newsItem.title.toUpperCase().indexOf(filterUpper);
+    var descriptionIndex = newsItem.description.toUpperCase().indexOf(filterUpper);
+
     return titleIndex !== -1 || descriptionIndex !== -1;
 }
 
@@ -21,17 +24,17 @@ function filterNewsAttributes(extractNews, filter) {
     var filteredNewsItem = {};
     filteredNewsItem.news = [];
     extractNews.forEach(
-		function (newsItem) {
-			var story = {
-				title: newsItem.title,
-				description: newsItem.description,
-				link: newsItem.link
-			};
-            if (filter === null || wordFiltering(story, filter)) {
+        function (newsItem) {
+            var story = {
+                title: newsItem.title,
+                description: newsItem.description,
+                link: newsItem.link
+            };
+            if (!filter || wordFiltering(story, filter)) {
                 filteredNewsItem.news.push(story);
             }
-		}
-	);
+        }
+    );
     return filteredNewsItem;
 }
 
@@ -40,14 +43,14 @@ function parseToJSON(response, xmlData, filter) {
     var parser = new xml2js.Parser({explicitArray : false});
 
     parser.parseString(xmlData, function (err, result) {
-		if (err) {
+        if (err) {
             var error = '{statusCode: 500, message: "XML parsing failed"}';
-			response.writeHead(500, { 'Content-Type': 'application/json'});
-			response.end(JSON.stringify(error));
-		} else {
-			var filterdNewsResult = filterNewsAttributes(result.rss.channel.item, filter);//get the items in the RSS then filter it
-			response.json(filterdNewsResult);
-		}
+            response.writeHead(500, { 'Content-Type': 'application/json'});
+            return response.end(JSON.stringify(error));
+        }
+
+        var filterdNewsResult = filterNewsAttributes(result.rss.channel.item, filter);//get the items in the RSS then filter it
+        response.json(filterdNewsResult);
     });
 }
 

@@ -3,9 +3,6 @@ var express = require('express'),
 
 var app = module.exports = express.createServer();
 
-//configure
-app.use(express.bodyParser());
-
 
 // Routes
 app.get('/news', function (req, res) {
