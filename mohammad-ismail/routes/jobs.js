@@ -4,7 +4,7 @@ exports.list = function (request, response) {
     var parser = new xml2js.Parser();
     var queryIndex = request.query;
     request.setEncoding('utf-8');
-    requestModule.get('http://localhost:9999/jobs.xml', function (error, res, body) {
+    requestModule.get('http://jobs.ps/rss.xml', function (error, res, body) {
         if (error || res.statusCode !== 200) {
             response.statusCode = 500;
             var errorMassage = {statusCode: 500, message: "error at server"};
