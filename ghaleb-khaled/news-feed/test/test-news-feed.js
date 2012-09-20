@@ -31,7 +31,7 @@ exports.testItem = function (test) {
     });
 }
 exports.testEmpty = function (test) {
-    testPath('?filter=man', test, function (empValue1) {
+    testPath('?filter=', test, function (empValue1) {
         testPath('', test, function (empValue2) {
             if(empValue1 != empValue2) {
                 test.ok(false," empty test is failed ")
