@@ -1,8 +1,8 @@
 var http = require('http');
 var server = 'http://127.0.0.1:8080/news';
 
-
-function dataFromPath(path, test, cb) {
+//get http response from a path in the server
+function dataFromPath(path, test, callback) {
     var resData = new String();
     http.get(server + path, function (res) {
 
@@ -10,33 +10,51 @@ function dataFromPath(path, test, cb) {
             resData += chunk;
         });
         res.on('end', function () {
-            cb(resData);
+            callback(resData);
         });
     }).on('error', function (e) {
-        test.ok(false, "request failed");
-        test.done();
-    });
+            test.ok(false, "Error :" + e.message);
+            test.done();
+        });
 
 }
-
-exports.testItem = function (test) {
-    var trueValue = "Soldier has baby in Afghanistan";
-    dataFromPath('?filter=Afghanistan', test, function (testValue) {
+//the the structure of the response
+exports.testStructure = function (test) {
+    dataFromPath('', test, function (feeds) {
         try {
-            test.equal(JSON.parse(testValue).news[0].title, trueValue, "retrieved data is not valid");
+            var news = JSON.parse(feeds).news;
+            news[0].title;
+            news[0].description;
+            news[0].link;
+            test.done();
         } catch (e) {
-            test.ok(false, "error:" + e.message);
+            test.ok(false, "Error :" + e.message);
+            test.done();
         }
-        test.done();
+
     });
 }
+//test the filtering
+exports.testItem = function (test) {
+    dataFromPath('', test, function (testValue) {
+        try {
+            var trueTitle = JSON.parse(testValue).news[0].title
+            dataFromPath('?filter='+trueTitle.split(' ',0),test,function (filteredValue) {
+                test.strictEqual(trueTitle,JSON.parse(filteredValue).news[0].title,"filtering failed");
+                test.done();
+            });
+        } catch (e) {
+            test.ok(false, "error: "+ e.message);
+            test.done();
+        }
 
+    });
+}
+//test empty cases
 exports.testEmpty = function (test) {
     dataFromPath('?filter=', test, function (empValue1) {
         dataFromPath('', test, function (empValue2) {
-            if(empValue1 != empValue2) {
-                test.ok(false," empty test is failed ")
-            }
+            test.strictEqual(empValue1, empValue2, "error on sending no parameter")
             test.done();
         });
     });
