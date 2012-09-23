@@ -26,6 +26,7 @@ exports.testStructure = function (test) {
             news[0].title;
             news[0].description;
             news[0].link;
+            test.ok(true, "succeeded ");
             test.done();
         } catch (e) {
             test.ok(false, "Error :" + e.message);
