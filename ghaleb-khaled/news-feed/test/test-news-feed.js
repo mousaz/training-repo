@@ -13,9 +13,9 @@ function dataFromPath(path, test, callback) {
             callback(resData);
         });
     }).on('error', function (e) {
-            test.ok(false, "Error :" + e.message);
-            test.done();
-        });
+        test.ok(false, "Error :" + e.message);
+        test.done();
+    });
 
 }
 //test the structure of the response
@@ -23,9 +23,11 @@ exports.testStructure = function (test) {
     dataFromPath('', test, function (feeds) {
         try {
             var news = JSON.parse(feeds).news;
-            news[0].title;
-            news[0].description;
-            news[0].link;
+            news.forEach(function (newsItem) {
+                newsItem.title;
+                newsItem.description;
+                newsItem.link;
+            });
             test.ok(true);
             test.done();
         } catch (e) {
@@ -35,13 +37,30 @@ exports.testStructure = function (test) {
 
     });
 }
+//check if a news item contains a word
+function newsContainsWord (word, newsItem) {
+    var titleIndex = newsItem.title.toUpperCase().indexOf(word);
+    var descriptionIndex = newsItem.description.toUpperCase().indexOf(word);
+    return titleIndex!==-1 || descriptionIndex !==-1 ;
+}
+
+
 //test the filtering
 exports.testItem = function (test) {
     dataFromPath('', test, function (testValue) {
         try {
-            var trueTitle = JSON.parse(testValue).news[0].title
-            dataFromPath('?filter='+trueTitle.split(' ',0),test,function (filteredValue) {
-                test.strictEqual(trueTitle,JSON.parse(filteredValue).news[0].title,"filtering failed");
+            var trueTitle = JSON.parse(testValue).news[0].title;
+            var chosenWord = new String(trueTitle.split(' ',0));
+
+            dataFromPath('?filter='+chosenWord,test,function (filteredValue) {
+
+                var news = JSON.parse(filteredValue).news;
+                var upperWord = chosenWord.toUpperCase();
+
+                news.forEach(function (newsItem) {
+                    test.ok(newsContainsWord(upperWord, newsItem),"filtering failed");
+                });
+
                 test.done();
             });
         } catch (e) {

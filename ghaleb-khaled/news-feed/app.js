@@ -9,20 +9,20 @@ docRouter(app, "News-Feed");
 
 // Routes
 app.get('/news', requestHandler, {
-    id:"GetApp",
-    doc:"Get news-feed",
-    params:{
-        filter:{
-            type:"string",
-            required:false,
-            optional:true,
-            description:"filter the news and permit news with " +
+    id: "GetApp",
+    doc: "Get news-feed",
+    params: {
+        filter: {
+            type: "string",
+            required: false,
+            optional: true,
+            description: "filter the news and permit news with " +
                 "title or description contains the keyword"
         }
     }
 });
 
-function requestHandler (req,res) {
+function requestHandler(req, res) {
     var filter = req.param('filter', null);
     news.bringData(res, filter);
 }
