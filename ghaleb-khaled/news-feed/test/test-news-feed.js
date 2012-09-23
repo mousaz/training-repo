@@ -18,7 +18,7 @@ function dataFromPath(path, test, callback) {
         });
 
 }
-//the the structure of the response
+//test the structure of the response
 exports.testStructure = function (test) {
     dataFromPath('', test, function (feeds) {
         try {
