@@ -1,14 +1,31 @@
 var express = require('express'),
-    news = require('./news.js');
+    news = require('./news.js'),
+    docRouter = require('docrouter').DocRouter;
 
 var app = module.exports = express.createServer();
 
+//docRouter
+docRouter(app, "News-Feed");
 
 // Routes
-app.get('/news', function (req, res) {
+app.get('/news', requestHandler, {
+    id:"GetApp",
+    doc:"Get news-feed",
+    params:{
+        filter:{
+            type:"string",
+            required:false,
+            optional:true,
+            description:"filter the news and permit news with " +
+                "title or description contains the keyword"
+        }
+    }
+});
+
+function requestHandler (req,res) {
     var filter = req.param('filter', null);
     news.bringData(res, filter);
-});
+}
 
 
 //Error handling
