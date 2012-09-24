@@ -11,8 +11,6 @@ exports.testResultWithoutQuery = function (test) {
             var  result =  JSON.parse(body.toString());
         }
         catch (e) {
-            res.statusCode = 500;
-            res.end(JSON.stringify({ statusCode: 500, message: "error at server" }));
             console.log("the server have unstable data");
         }
         test.ok(result, "the request is empty");
@@ -43,8 +41,6 @@ exports.testResultWithQuery = function (test) {
             var  result =  JSON.parse(body.toString());
         }
         catch (error) {
-            res.statusCode = 500;
-            res.end(JSON.stringify({ statusCode: 500, message: "error at server" }));
             console.log("the server have unstable data");
         }
         if ((result && result.jobs) && Array.isArray(result.jobs)) {
@@ -68,8 +64,6 @@ exports.testFilterMethod = function (test) {
            var result =  JSON.parse(body.toString());
         }
         catch (error) {
-            res.statusCode = 500;
-            res.end(JSON.stringify({ statusCode: 500, message: "error at server" }));
             console.log("the server have unstable data");
         }
         if (result && result.jobs) {

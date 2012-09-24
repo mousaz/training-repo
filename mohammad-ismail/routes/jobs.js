@@ -9,7 +9,7 @@ exports.list = function (request, response) {
             response.statusCode = 500;
             var errorMassage = {statusCode: 500, message: "error at server"};
             response.statusCode = 500;
-            response.end(JSON.stringify(errorMassage));
+            return response.end(JSON.stringify(errorMassage));
         }
         try {
             parser.addListener('end', function (result) {
@@ -30,21 +30,21 @@ exports.list = function (request, response) {
                     }
                     var finalResult = {jobs: jsonObj };
                     console.log("the data ready to send");
-                    response.send(JSON.stringify(finalResult));
-                    response.end("");
+                    return response.end(JSON.stringify(finalResult));
                 }
                 catch (e) {
-                    response.statusCode = 500;
-                    response.end(JSON.stringify({ statusCode: 500, message: "error at server" }));
                     console.error("Got error: " + e.message);
+                    response.statusCode = 500;
+                    return response.end(JSON.stringify({ statusCode: 500, message: "error at server" }));
+
                 }
             });
             parser.parseString(body);
         }
         catch (e) {
-            response.statusCode = 500;
-            response.end(JSON.stringify({ statusCode: 500, message: "error at server" }));
             console.error("Got error: " + e.message);
+            response.statusCode = 500;
+            return response.end(JSON.stringify({ statusCode: 500, message: "error at server" }));
         }
     });
 };
