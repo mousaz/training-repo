@@ -1,31 +1,34 @@
 var express = require('express'),
     news = require('./news.js'),
-    docRouter = require('docrouter').DocRouter;
+    docRouter = require('docrouter').DocRouter,
+    port = process.env.Port || 8080;
 
 var app = module.exports = express.createServer();
-
-//docRouter
-docRouter(app, "News-Feed");
-
-// Routes
-app.get('/news', requestHandler, {
-    id: "GetApp",
-    doc: "Get news-feed",
-    params: {
-        filter: {
-            type: "string",
-            required: false,
-            optional: true,
-            description: "filter the news and permit news with " +
-                "title or description contains the keyword"
-        }
-    }
-});
 
 function requestHandler(req, res) {
     var filter = req.param('filter', null);
     news.bringData(res, filter);
 }
+
+//Router and docRouter
+app.use("/news", docRouter(express.router, "/news", function (app) {
+    app.get('/', requestHandler, {
+        id: "GetApp",
+        doc: "Get news-feed",
+        params: {
+            filter: {
+                type: "string",
+                required: false,
+                style: "query",
+                description: "filter the news and permit news with " +
+                    "title or description contains the keyword"
+            }
+        },
+        response: {
+            representations: ["application/json"]
+        }
+    });
+}));
 
 
 //Error handling
@@ -42,5 +45,6 @@ app.use(function (req, res, next) {
     res.end(JSON.stringify(error));
 });
 
+
 //start
-app.listen(8080);
+app.listen(port);
