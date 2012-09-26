@@ -1,13 +1,12 @@
-var CurrentDate;
 device.scheduler.setTimer({
         name: "jobfeedTest",
         time: 0,
         interval: 30*60*1000,
         exact: false },
     function () {
-        CurrentDate =new Date().getHours();
-     if(CurrentDate < 9 || CurrentDate > 17){
-     return console.info('the jobs feed suspended between 6pm to 9am');
+     var CurrentHour =new Date().getHours();
+     if(CurrentHour < 8 || CurrentHour > 17){
+           return console.info('the jobs feed suspended between 6pm to 9am');
      }   
         device.ajax(
             {
@@ -31,13 +30,12 @@ device.scheduler.setTimer({
                 var JobTiltleString = "";
                 var title = parsedBody.jobs[0].title;
                 parsedBody.jobs.forEach(function (item,index) {
-                    JobTiltleString = JobTiltleString + ''+ ++index +": " + item.title + "\n";
+                JobTiltleString = JobTiltleString + ''+ ++index + ": " + item.title + "\n";
                 });
                 console.info('successfully received http response!');
                 var notification = device.notifications.createNotification('Job search result');
                 notification.content = ' jobs is found '+parsedBody.jobs.length;
                 notification.on('click', function() {
-                    ////////////////////////////////////
                     var messageBox = device.notifications.createMessageBox('More info');
                     messageBox.content = JobTiltleString;
                     messageBox.buttons = ['SET # of Job','cancel'];
@@ -47,9 +45,10 @@ device.scheduler.setTimer({
                         inputBox1.type = 'number';
                         inputBox1.buttons = [ 'Go' ];
                         inputBox1.on('Go', function() {
-                            device.browser.launch(parsedBody.jobs[--inputBox1.value].link);
+                        device.browser.launch(parsedBody.jobs[ --inputBox1.value ].link);
                         });
-                        inputBox1.show();});
+                    inputBox1.show();
+                    });
                     messageBox.show();
                 });
                 notification.show();
