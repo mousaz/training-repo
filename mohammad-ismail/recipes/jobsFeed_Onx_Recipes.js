@@ -48,7 +48,6 @@ device.scheduler.setTimer({
                         inputBox1.buttons = [ 'Go' ];
                         inputBox1.on('Go', function() {
                             device.browser.launch(parsedBody.jobs[--inputBox1.value].link);
-
                         });
                         inputBox1.show();});
                     messageBox.show();
