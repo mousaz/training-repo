@@ -1,9 +1,14 @@
+var CurrentDate;
 device.scheduler.setTimer({
         name: "jobfeedTest",
         time: 0,
         interval: 30*60*1000,
         exact: false },
     function () {
+        CurrentDate =new Date().getHours();
+     if(CurrentDate < 9 || CurrentDate > 17){
+     return console.info('the jobs feed suspended between 6pm to 9am');
+     }   
         device.ajax(
             {
                 url: 'http://jobs-feed.mousaz.msproto.net/jobs?filter=Assistant',
