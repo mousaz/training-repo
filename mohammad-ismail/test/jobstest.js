@@ -61,7 +61,7 @@ exports.testFilterMethod = function (test) {
             test.done();
             console.error("Got error: " + e.message);}
         try {
-           var result =  JSON.parse(body.toString());
+            var result =  JSON.parse(body.toString());
         }
         catch (error) {
             console.log("the server have unstable data");
