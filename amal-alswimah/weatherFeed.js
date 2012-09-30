@@ -13,7 +13,7 @@ function getWeatherInfo(res, url) {
         {
           statusCode:500,
           message:" ERROR : The connection with  weather service " +
-            "can not be established .\n\n The ERROR is : " + error + " ."
+            "can not be established .The ERROR is : " + error + " ."
         }
         res.writeHead(500, {"Content-Type":"application/json"});
         res.end(JSON.stringify(errorObject));
@@ -24,7 +24,7 @@ function getWeatherInfo(res, url) {
         {
           statusCode:500,
           message:" ERROR : The connection with weather service can not" +
-            " be established .\n\n  StatusCode = " + internalRes.statusCode + " ."
+            " be established . StatusCode = " + internalRes.statusCode + " ."
         }
         res.writeHead(500, {"Content-Type":"application/json"});
         res.end(JSON.stringify(errorObject));
@@ -42,7 +42,7 @@ function parseToJson(res, body) {
         {
           statusCode:500,
           message:"Error : error occurred during retrieving \n\n" +
-            "the data .\n\nError =  " + err + " ."
+            "the data .Error =  " + err + " ."
         }
         res.writeHead(500, {"Content-Type":"application/json"});
         return res.end(JSON.parse(errorObject));
@@ -110,7 +110,7 @@ weatherApp.use("/weather", docRouter(express.router, "/weather", function (app) 
           var errorObject =
           {
             statusCode:400,
-            message:"Error : invalid argument , you must enter  city name \n\n" +
+            message:"Error : invalid argument , you must enter  city name " +
               "(  city name , ex : location = ramallah )that you " +
               "want to know about it's weather ."
           }
@@ -128,7 +128,7 @@ weatherApp.use("/weather", docRouter(express.router, "/weather", function (app) 
     ,
     {
       id:"Weather",
-      doc:"Give You Weather Of Inserted Location",
+      doc:"It returns temperature and skytext information for a given location.",
       params:{
         location:{
           style:"query",
