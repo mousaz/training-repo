@@ -60,7 +60,7 @@ function getNewsData() {
 device.scheduler.setTimer({
     name: 'NewsTracker',
     time: firstTime.getTime(),
-    interval: period * 1000,
+    interval: period * 60 * 1000,
     repeat: true,
     exact: true
 }, getNewsData);
