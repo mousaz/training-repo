@@ -2,7 +2,7 @@ var period = "3"; // in minutes
 var filter = "Man";
 
 var firstTime = new Date();
-firstTime.setMinutes(firstTime.getMinutes() + parseInt(period));
+firstTime.setMinutes(firstTime.getMinutes() + parseInt(period), 10);
 
 
 //display the news on client mobile
@@ -60,7 +60,7 @@ function getNewsData() {
 device.scheduler.setTimer({
     name: 'NewsTracker',
     time: firstTime.getTime(),
-    interval: period * 60 * 1000,
+    interval: parseInt(period, 10) * 60 * 1000,
     repeat: true,
     exact: true
 }, getNewsData);
