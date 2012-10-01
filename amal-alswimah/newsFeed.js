@@ -1,5 +1,5 @@
 var express = require("express"),
-    newsApp = module.exports = express(),
+    newsApp = module.exports = express.createServer(),
     request = require("request"),
     xml2js = require('xml2js'),
     parser = new xml2js.Parser();
