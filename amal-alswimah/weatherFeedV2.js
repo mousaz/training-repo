@@ -1,5 +1,5 @@
 var express = require("express"),
-  weatherApp = module.exports = express(),
+  weatherApp = module.exports = express.createServer(),
   http = require("http"),
   xml2js = require('xml2js'),
   parser = new xml2js.Parser();
