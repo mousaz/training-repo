@@ -138,7 +138,7 @@ this is an error
 ```bash
 git add test/tests.js  # assuming you are under firstapp directory
 git commit -m 'adding test app for firstapp'
-git push <your-branch>
+git push origin <your-branch>
 ```
 
 # Learning git and node.js
