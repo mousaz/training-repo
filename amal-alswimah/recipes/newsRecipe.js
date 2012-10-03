@@ -1,9 +1,8 @@
-var notification = device.notifications.createNotification('news'),
-  hours = 9,
+var hours = 9,
   minutes = 14,
   now = new Date(),
   timerStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes, 0, 0),
-  newsTimeReminder = function () {
+  sendNewsTimeReminder = function () {
     device.ajax({
         url: 'http://news-feed.dimash.msproto.net/news',
         type: 'GET',
@@ -22,11 +21,12 @@ var notification = device.notifications.createNotification('news'),
         } else {
           parsedBody = JSON.parse(body);
           for(var i=0;i<3;i++) {
+            var title = parsedBody.news[i].title;
             var reminder = device.notifications.createNotification('It\'s news time');
-            reminder.content = parsedBody.news[i].title;
+            reminder.content = title;
             reminder.on('click', function() {
-              var messageBox = device.notifications.createMessageBox('more info about ' + parsedBody.news[i].title);
-              messageBox.contents = 'Would you like to know about '+parsedBody.news[i].title;
+              var messageBox = device.notifications.createMessageBox('More Info about ' + title);
+              messageBox.contents = 'Would you like to know about '+ title;
               messageBox.buttons = ['Yes','No'];
               messageBox.on('Yes', function() {
                 device.browser.launch(parsedBody.news[i].link);
@@ -49,10 +49,10 @@ var notification = device.notifications.createNotification('news'),
       } );
   };
 device.scheduler.setTimer({
-    name: 'dailyHoroscopeTimer',
+    name: 'dailyNewsTimer',
     time: timerStart.getTime(),
     interval: 'day',
     repeat: true,
     exact: true
   },
-  newsTimeReminder);
+  sendNewsTimeReminder);
