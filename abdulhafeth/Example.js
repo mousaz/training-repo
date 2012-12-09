@@ -1,27 +1,21 @@
 var http = require('http');
 var https = require('https');
-
-
-http.createServer(function (req, res) {
+var express = require("express");
+var docRouter = require('docrouter').DocRouter;
+var port = 8080;
+var app = express.createServer();
+function requestHandler(req, res) {
+    process(req, res);
+}
+function process(req, res) {
     //create the geo long/lat path
-    console.log(req.url.split("/"));
+    console.log(req.url);
     var url;
     if (req.url.split("/")[1].localeCompare("favicon.ico") != 0) {
+        console.log(req.url);
         if (req.url.split("/").length == 3 && req.url.split("/")[1] != null && !isNaN(req.url.split("/")[1] - 0) && req.url.split("/")[2] != null && !isNaN(req.url.split("/")[2] - 0)) {
-//            var ip_address = null;
-//
-//            try {
-//                if (req.headers['x-forwarded-for'] != null)
-//                    ip_address = req.headers['x-forwarded-for'];
-//                else
-//                    ip_address = req.connection.remoteAddress;
-//            }
-//            catch (error) {
-//                ip_address = req.connection.remoteAddress;
-//            }
-
             url = ["/v2/venues/search?ll=" + req.url.split("/")[1] + "," + req.url.split("/")[2] + "&&limit=50&&oauth_token=3TXOU3W43XZSLRMWRQ2FHYFWBMEWS3E1GQJGPIPYDYYZ4F2D&&categoryId=4d4b7105d754a06374d81259"].join("");
-           var options = {host:"api.foursquare.com", path:url, port:443};
+            var options = {host:"api.foursquare.com", path:url, port:443};
 
             var reg = https.get(options, function (response) {
                 var pageData = "";
@@ -137,9 +131,39 @@ http.createServer(function (req, res) {
             });
         }
     }
+}
 
-}).listen(8080);
+//Router and docRouter
+app.use("/restNearBy", docRouter(express.router, "/restNearBy", function (app) {
+    app.get('/*', requestHandler, {
+        id:"GetApp",
+        doc:"Get restaurants-feed",
+        params:{
+            filter:{
+                type:"string",
+                required:false,
+                style:"query",
+                description:"Finds the restaurants around your location with  " +
+                    "name and some contact information\n you can use the lat long as: \n /restNearBy/lat/long or you can use the address as: /restNearBy/Jordan/Amman/"
+            }
+        },
+        response:{
+            representations:["application/json"]
+        }
+    });
+}));
 
+//Error handling
+app.use(function (err, req, res, next) {
+    var error = '{statusCode: 500, message: "Something went wrong in server, try again"}';
 
+    res.writeHead(500, { 'Content-Type':'application/json'});
+    res.end(JSON.stringify(error));
+});
+app.use(function (req, res, next) {
+    var error = '{statusCode: 404, message: "The requested URL is not valid!"}';
 
-
+    res.writeHead(404, { 'Content-Type':'application/json'});
+    res.end(JSON.stringify(error));
+});
+app.listen(port);
