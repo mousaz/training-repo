@@ -4,4 +4,4 @@ setInterval(function (){
 console.log("world");
 },2000);
 
-console.log("hello");
+Console.log("hello");
